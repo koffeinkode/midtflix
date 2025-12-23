@@ -1,0 +1,2256 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Midtflix - Norske Regionfilmer</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #ffffff;
+            color: #0f0f0f;
+            line-height: 1.6;
+        }
+
+        header {
+            background: #fff;
+            border-bottom: 1px solid #e5e5e5;
+            padding: 16px 24px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 24px;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+
+        .login-link {
+            font-size: 14px;
+            color: #065fd4;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .login-link:hover {
+            text-decoration: underline;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: #065fd4;
+            text-decoration: none;
+            letter-spacing: -0.5px;
+        }
+
+        .back-btn {
+            background: none;
+            border: none;
+            font-size: 14px;
+            color: #606060;
+            cursor: pointer;
+            padding: 8px 12px;
+            border-radius: 18px;
+            transition: background 0.2s;
+        }
+
+        .back-btn:hover {
+            background: #f2f2f2;
+        }
+
+        main {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 24px;
+        }
+
+        .film-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 24px;
+            margin-top: 24px;
+        }
+
+        .film-card {
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .film-card:hover {
+            transform: translateY(-4px);
+        }
+
+        .film-poster {
+            width: 100%;
+            aspect-ratio: 16/9;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 12px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 48px;
+            font-weight: 700;
+        }
+
+        .film-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .film-meta {
+            font-size: 14px;
+            color: #606060;
+        }
+
+        .film-meta a {
+            color: #065fd4;
+            text-decoration: none;
+        }
+
+        .film-meta a:hover {
+            text-decoration: underline;
+        }
+
+        .film-detail-hero {
+            width: 100%;
+            height: 400px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 12px;
+            margin-bottom: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 72px;
+            font-weight: 700;
+        }
+
+        .film-detail-title {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .film-detail-meta {
+            font-size: 14px;
+            color: #606060;
+            margin-bottom: 24px;
+        }
+
+        .film-detail-synopsis {
+            font-size: 16px;
+            line-height: 1.8;
+            margin-bottom: 32px;
+            max-width: 800px;
+        }
+
+        .credits-section {
+            background: #f9f9f9;
+            padding: 24px;
+            border-radius: 12px;
+        }
+
+        .credits-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+
+        .credit-item {
+            margin-bottom: 12px;
+            font-size: 15px;
+        }
+
+        .credit-item strong {
+            color: #0f0f0f;
+            margin-right: 8px;
+        }
+
+        .credit-item a {
+            color: #065fd4;
+            text-decoration: none;
+        }
+
+        .credit-item a:hover {
+            text-decoration: underline;
+        }
+
+        .person-profile {
+            text-align: center;
+            margin-bottom: 48px;
+        }
+
+        .person-photo {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            margin: 0 auto 16px;
+            object-fit: cover;
+        }
+
+        .person-social {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            margin: 16px 0 24px;
+        }
+
+        .social-link {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #f2f2f2;
+            color: #606060;
+            text-decoration: none;
+            font-size: 18px;
+            transition: background 0.2s;
+        }
+
+        .social-link:hover {
+            background: #e5e5e5;
+        }
+
+        .person-name {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .person-bio {
+            font-size: 16px;
+            color: #606060;
+            max-width: 600px;
+            margin: 0 auto 8px;
+        }
+
+        .person-region {
+            font-size: 14px;
+            color: #606060;
+        }
+
+        .filmography-section {
+            margin-top: 48px;
+        }
+
+        .filmography-role {
+            margin-bottom: 32px;
+        }
+
+        .filmography-role-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+
+        .rent-section {
+            background: #f9f9f9;
+            padding: 24px;
+            border-radius: 12px;
+            margin-bottom: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 24px;
+        }
+
+        .rent-info {
+            flex: 1;
+        }
+
+        .rent-price {
+            font-size: 24px;
+            font-weight: 700;
+            color: #0f0f0f;
+            margin-bottom: 8px;
+        }
+
+        .rent-description {
+            font-size: 14px;
+            color: #606060;
+            line-height: 1.6;
+        }
+
+        .rent-btn {
+            background: #065fd4;
+            color: white;
+            border: none;
+            padding: 12px 32px;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 24px;
+            cursor: pointer;
+            transition: background 0.2s;
+            white-space: nowrap;
+        }
+
+        .rent-btn:hover {
+            background: #0449b8;
+        }
+
+        .home-hero {
+            min-height: 60vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 48px 24px;
+        }
+
+        .home-title {
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            color: #0f0f0f;
+        }
+
+        .home-tagline {
+            font-size: 20px;
+            color: #606060;
+            margin-bottom: 48px;
+            max-width: 600px;
+        }
+
+        .search-container {
+            width: 100%;
+            max-width: 600px;
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 16px 24px;
+            font-size: 16px;
+            border: 2px solid #e5e5e5;
+            border-radius: 32px;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .search-input:focus {
+            border-color: #065fd4;
+            box-shadow: 0 4px 12px rgba(6, 95, 212, 0.1);
+        }
+
+        .search-results {
+            margin-top: 48px;
+            width: 100%;
+            max-width: 1200px;
+        }
+
+        .search-results-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 24px;
+            color: #606060;
+        }
+
+        .search-disclaimer {
+            font-size: 13px;
+            color: #909090;
+            margin-top: 12px;
+            font-style: italic;
+        }
+
+        .login-container {
+            max-width: 400px;
+            margin: 80px auto;
+            padding: 40px;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .login-title {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+
+        .login-subtitle {
+            font-size: 14px;
+            color: #606060;
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .security-warning {
+            background: #fff3cd;
+            border: 1px solid #ffc107;
+            border-radius: 8px;
+            padding: 12px 16px;
+            margin-bottom: 24px;
+            font-size: 13px;
+            color: #856404;
+        }
+
+        .security-warning strong {
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #0f0f0f;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px 16px;
+            font-size: 15px;
+            border: 1px solid #e5e5e5;
+            border-radius: 8px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .form-input:focus {
+            border-color: #065fd4;
+        }
+
+        .btn-primary {
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            background: #065fd4;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn-primary:hover {
+            background: #0449b8;
+        }
+
+        .form-link {
+            text-align: center;
+            margin-top: 16px;
+            font-size: 14px;
+            color: #606060;
+        }
+
+        .form-link a {
+            color: #065fd4;
+            text-decoration: none;
+        }
+
+        .form-link a:hover {
+            text-decoration: underline;
+        }
+
+        .admin-container {
+            max-width: 1000px;
+            margin: 40px auto;
+            padding: 24px;
+        }
+
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 32px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid #e5e5e5;
+        }
+
+        .admin-title {
+            font-size: 28px;
+            font-weight: 700;
+        }
+
+        .btn-secondary {
+            padding: 10px 20px;
+            font-size: 14px;
+            font-weight: 600;
+            background: #f2f2f2;
+            color: #0f0f0f;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn-secondary:hover {
+            background: #e5e5e5;
+        }
+
+        .admin-section {
+            background: #f9f9f9;
+            padding: 24px;
+            border-radius: 12px;
+            margin-bottom: 24px;
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+
+        .film-list-item {
+            background: white;
+            padding: 16px;
+            border-radius: 8px;
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .film-list-info {
+            flex: 1;
+        }
+
+        .film-list-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .film-list-meta {
+            font-size: 14px;
+            color: #606060;
+        }
+
+        .film-list-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn-small {
+            padding: 6px 12px;
+            font-size: 13px;
+            font-weight: 600;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+        .btn-small:hover {
+            opacity: 0.8;
+        }
+
+        .btn-edit {
+            background: #065fd4;
+            color: white;
+        }
+
+        .btn-delete {
+            background: #dc3545;
+            color: white;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 16px;
+            font-size: 14px;
+        }
+
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 16px;
+            font-size: 14px;
+        }
+
+        @media (max-width: 768px) {
+            .film-grid {
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+                gap: 16px;
+            }
+
+            .film-detail-hero {
+                height: 250px;
+                font-size: 48px;
+            }
+
+            .film-detail-title {
+                font-size: 24px;
+            }
+
+            .person-name {
+                font-size: 24px;
+            }
+
+            .rent-section {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .rent-btn {
+                width: 100%;
+            }
+
+            .home-title {
+                font-size: 36px;
+            }
+
+            .home-tagline {
+                font-size: 18px;
+            }
+
+            .home-hero {
+                min-height: 50vh;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .film-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <div class="header-left">
+                <button class="back-btn hidden" id="backBtn" onclick="goBack()">← Tilbake</button>
+                <a href="#" class="logo">MIDTFLIX</a>
+            </div>
+            <a href="#login" class="login-link">For filmskapere →</a>
+        </div>
+    </header>
+
+    <main id="app"></main>
+
+    <script>
+        const filmskapere = [
+            {
+                id: 1,
+                name: "Jon Vatne",
+                photo: "JonVatne.png",
+                bio: "Regissør og filmskaper fra Trondheim. Kjent for dokumentarfilmer som utforsker identitet, natur og psykologi. Født 1984.",
+                region: "Trøndelag",
+                instagram: "#",
+                website: "#"
+            },
+            {
+                id: 2,
+                name: "Mari Nilsen Neira",
+                photo: "MariNilsenNeira.png",
+                bio: "Erfaren regissør og produsent med over 20 år i filmbransjen. Sentralfigur i trøndersk dokumentarfilm. Vinner av NTNU Filmpris 2025.",
+                region: "Trøndelag",
+                instagram: "#",
+                website: "#"
+            },
+            {
+                id: 3,
+                name: "Håvard Bustnes",
+                photo: "HåvardBustnes.png",
+                bio: "Prisbelønt dokumentarfilmskaper og medlem av European Film Academy. Medgründer av UpNorth Film. Kjent for politiske dokumentarer.",
+                region: "Trøndelag",
+                instagram: "#",
+                website: "#"
+            },
+            {
+                id: 4,
+                name: "Magnus Skatvold",
+                photo: "magnusskatvold.jpeg",
+                bio: "Regissør, editor og filmfotograf fra Trondheim. Grunnla Spætt Film i 2006. Film- og journalistikkutdannelse fra Trondheim og New York.",
+                region: "Trøndelag",
+                instagram: "#",
+                website: "#"
+            }
+        ];
+
+        const filmer = [
+            {
+                id: 1,
+                title: "Polyfonatura",
+                year: 2019,
+                duration: 74,
+                type: "Dokumentar",
+                posterUrl: "polyfonatura.jpeg",
+                synopsis: "En musikalsk reise gjennom naturens lyder og menneskets forhold til omgivelsene. Følger lydkunstner Eirik Havnes som lager en symfonisk mesterlaug med naturen som orkester.",
+                region: "Trøndelag",
+                credits: [
+                    { personId: 1, role: "Regissør" },
+                    { personId: 1, role: "Manus" }
+                ]
+            },
+            {
+                id: 2,
+                title: "Psykonauten",
+                year: 2015,
+                duration: 80,
+                type: "Dokumentar",
+                posterUrl: "psykoauten.jpeg",
+                synopsis: "En dokumentar om psykedeliske stoffer og deres potensial innen medisinsk behandling. En personlig og samfunnsrelevant undersøkelse.",
+                region: "Trøndelag",
+                credits: [
+                    { personId: 1, role: "Regissør" },
+                    { personId: 1, role: "Manus" }
+                ]
+            },
+            {
+                id: 3,
+                title: "Iris",
+                year: 2024,
+                duration: 14,
+                type: "Dokumentar",
+                posterUrl: "iris.jpg",
+                synopsis: "En nær og personlig kort-dokumentar om identitet og selvforståelse.",
+                region: "Trøndelag",
+                credits: [
+                    { personId: 1, role: "Regissør" },
+                    { personId: 1, role: "Produsent" },
+                    { personId: 1, role: "Manus" }
+                ]
+            },
+            {
+                id: 4,
+                title: "Bunadsgeriljaen",
+                year: 2023,
+                duration: 77,
+                type: "Dokumentar",
+                posterUrl: "bunadsgeriljaen.jpeg",
+                synopsis: "En film om kvinner som iførte seg tradisjonell norsk bunad for å protestere mot nedleggelse av fødeavdelinger i distriktene. En historie om tradisjon, identitet og motstand.",
+                region: "Trøndelag",
+                credits: [
+                    { personId: 2, role: "Regissør" }
+                ]
+            },
+            {
+                id: 5,
+                title: "Lidenskapens skole",
+                year: 2008,
+                duration: 58,
+                type: "Dokumentar",
+                posterUrl: "lidenskapensskole.png",
+                synopsis: "Unge musikere fra Trondheim lærer å spille tango. En fortelling om engasjement, musikk og utdanning.",
+                region: "Trøndelag",
+                credits: [
+                    { personId: 2, role: "Regissør" }
+                ]
+            },
+            {
+                id: 6,
+                title: "Arven",
+                posterUrl: "Arven.jpg",
+                year: 2018,
+                duration: 90,
+                type: "Dokumentar",
+                synopsis: "En undersøkelse av hva vi arver fra tidligere generasjoner og hvordan arven former oss.",
+                region: "Trøndelag",
+                credits: [
+                    { personId: 2, role: "Regissør" }
+                ]
+            },
+            {
+                id: 7,
+                title: "Golden Dawn Girls",
+                year: 2017,
+                duration: 68,
+                type: "Dokumentar",
+                posterUrl: "goldendawngirls.jpg",
+                synopsis: "En innsiktsfull dokumentar om kvinnelige medlemmer av det greske høyreekstreme partiet Gyllent Daggry. Vant priser på over 50 filmfestivaler.",
+                region: "Trøndelag",
+                credits: [
+                    { personId: 3, role: "Regissør" },
+                    { personId: 3, role: "Produsent" },
+                    { personId: 3, role: "Manus" }
+                ]
+            },
+            {
+                id: 8,
+                title: "Two Raging Grannies",
+                year: 2013,
+                duration: 78,
+                type: "Dokumentar",
+                posterUrl: "tworaginggrannies.jpg",
+                synopsis: "To aktive pensjonister på elsparkesykler reiser fra Seattle til Wall Street for å utforske om evig økonomisk vekst er mulig. Shirley (90) og Hinda (84) utfordrer forbrukerkulturen.",
+                region: "Trøndelag",
+                credits: [
+                    { personId: 3, role: "Regissør" }
+                ]
+            },
+            {
+                id: 9,
+                title: "Trond Giske - Makta rår",
+                year: 2021,
+                duration: 86,
+                type: "Dokumentar",
+                posterUrl: "trondgidksemaktarår.jpeg",
+                synopsis: "En nær dokumentar om en av Norges mest lovende politikere som var nær ved å bli statsminister, inntil skandalehistorier dukket opp i kjølvannet av #MeToo. Vant Gullruten (norsk Emmy).",
+                region: "Trøndelag",
+                credits: [
+                    { personId: 3, role: "Regissør" },
+                    { personId: 3, role: "Produsent" }
+                ]
+            },
+            {
+                id: 10,
+                title: "Blue Code of Silence",
+                year: 2020,
+                duration: 74,
+                type: "Dokumentar",
+                posterUrl: "bluecode.jpeg",
+                synopsis: "En undersøkende dokumentar om korrupsjon og maktmisbruk i New York Police Department. Co-regissert med Greg Mallozzi. Filmen avdekker systemiske problemer og den tause kulturen som beskytter korrupte politifolk.",
+                region: "Trøndelag",
+                credits: [
+                    { personId: 4, role: "Regissør" },
+                    { personId: 4, role: "Produsent" },
+                    { personId: 4, role: "Foto" }
+                ]
+            },
+            {
+                id: 11,
+                title: "Trondheimsreisen",
+                year: 2018,
+                duration: 80,
+                type: "Dokumentar",
+                posterUrl: "trondheimsreisen.jpeg",
+                synopsis: "En fascinerende tidsmaskindokumentar som tar seerne med på en reise gjennom Trondheim fra 1906 til nåtiden. Filmen kombinerer historisk filmmateriale med moderne opptak for å vise hvordan byen har utviklet seg over et århundre.",
+                region: "Trøndelag",
+                credits: [
+                    { personId: 4, role: "Regissør" },
+                    { personId: 4, role: "Klipp" }
+                ]
+            },
+            {
+                id: 12,
+                title: "Livet av Havnes",
+                year: 2020,
+                duration: 58,
+                type: "Dokumentar",
+                posterUrl: "livetavhavnes.jpg",
+                synopsis: "En poetisk hybrid-dokumentar som følger kunstneren Eirik Havnes. Filmen blander poesi, teater og konsert, og ble filmet i Oslo. En unik og eksperimentell tilnærming til dokumentarformatet.",
+                region: "Trøndelag",
+                credits: [
+                    { personId: 4, role: "Regissør" },
+                    { personId: 4, role: "Foto" },
+                    { personId: 4, role: "Klipp" }
+                ]
+            }
+        ];
+
+        function getPerson(id) {
+            return filmskapere.find(p => p.id === id);
+        }
+
+        function getFilm(id) {
+            return getAllFilms().find(f => f.id === id);
+        }
+
+        function getPersonFilms(personId) {
+            return getAllFilms().filter(film =>
+                film.credits.some(credit => credit.personId === personId)
+            );
+        }
+
+        function getPersonCredits(personId) {
+            const films = getPersonFilms(personId);
+            const grouped = {};
+
+            films.forEach(film => {
+                film.credits.forEach(credit => {
+                    if (credit.personId === personId) {
+                        if (!grouped[credit.role]) {
+                            grouped[credit.role] = [];
+                        }
+                        grouped[credit.role].push(film);
+                    }
+                });
+            });
+
+            return grouped;
+        }
+
+        function renderHomePage() {
+            const app = document.getElementById('app');
+            const backBtn = document.getElementById('backBtn');
+            backBtn.classList.add('hidden');
+
+            app.innerHTML = `
+                <div class="home-hero">
+                    <h1 class="home-title">MIDTFLIX</h1>
+                    <p class="home-tagline">Trøndelag på film</p>
+                    <div class="search-container">
+                        <input
+                            type="text"
+                            class="search-input"
+                            placeholder="F.eks. Jon Vatne, Mari Nilsen Neira, Håvard Bustnes..."
+                            id="searchInput"
+                            oninput="handleSearch(this.value)"
+                        >
+                        <p class="search-disclaimer">Dette er en prototype – all informasjon er eksempeltekst</p>
+                    </div>
+                    <div id="searchResults"></div>
+                </div>
+            `;
+        }
+
+        function handleSearch(query) {
+            const resultsDiv = document.getElementById('searchResults');
+
+            if (!query || query.trim().length < 2) {
+                resultsDiv.innerHTML = '';
+                return;
+            }
+
+            const searchTerm = query.toLowerCase();
+
+            const matchedFilms = getAllFilms().filter(film =>
+                film.title.toLowerCase().includes(searchTerm)
+            );
+
+            const matchedPersons = filmskapere.filter(person =>
+                person.name.toLowerCase().includes(searchTerm)
+            );
+
+            if (matchedFilms.length === 0 && matchedPersons.length === 0) {
+                resultsDiv.innerHTML = '<div class="search-results"><p class="search-results-title">Ingen resultater funnet</p></div>';
+                return;
+            }
+
+            let html = '<div class="search-results">';
+
+            if (matchedFilms.length > 0) {
+                html += `
+                    <h2 class="search-results-title">Filmer (${matchedFilms.length})</h2>
+                    <div class="film-grid">
+                        ${matchedFilms.map(film => {
+                            const regissor = film.credits.find(c => c.role === 'Regissør');
+                            const person = regissor ? getPerson(regissor.personId) : null;
+
+                            return `
+                                <div class="film-card" onclick="navigateTo('film-${film.id}')">
+                                    <img src="${film.posterUrl}" alt="${film.title}" style="width: 100%; aspect-ratio: 16/9; object-fit: cover; border-radius: 4px; margin-bottom: 12px;">
+                                    <div class="film-title">${film.title}</div>
+                                    <div class="film-meta">
+                                        ${film.year} ${person ? `• <a href="#person-${person.id}" onclick="event.stopPropagation()">${person.name}</a>` : ''}
+                                    </div>
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+                `;
+            }
+
+            if (matchedPersons.length > 0) {
+                html += `
+                    <h2 class="search-results-title" style="margin-top: 32px;">Filmskapere (${matchedPersons.length})</h2>
+                    <div class="film-grid">
+                        ${matchedPersons.map(person => `
+                            <div class="film-card" onclick="navigateTo('person-${person.id}')" style="display: flex; flex-direction: column; align-items: center;">
+                                <img src="${person.photo}" alt="${person.name}" style="width: 120px; height: 120px; object-fit: cover; border-radius: 50%; margin-bottom: 12px;">
+                                <div class="film-title">${person.name}</div>
+                                <div class="film-meta">${person.region}</div>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+            }
+
+            html += '</div>';
+            resultsDiv.innerHTML = html;
+        }
+
+        function renderFilmPage(filmId) {
+            const film = getFilm(parseInt(filmId));
+            if (!film) {
+                renderHomePage();
+                return;
+            }
+
+            const app = document.getElementById('app');
+            const backBtn = document.getElementById('backBtn');
+            backBtn.classList.remove('hidden');
+
+            const groupedCredits = {};
+            film.credits.forEach(credit => {
+                if (!groupedCredits[credit.role]) {
+                    groupedCredits[credit.role] = [];
+                }
+                const person = getPerson(credit.personId);
+                if (person) {
+                    groupedCredits[credit.role].push(person);
+                }
+            });
+
+            const events = getFilmEvents(film.id);
+
+            app.innerHTML = `
+                <img src="${film.posterUrl}" alt="${film.title}" style="width: 100%; height: 400px; object-fit: cover; border-radius: 4px; margin-bottom: 32px;">
+                <h1 class="film-detail-title">${film.title} (${film.year})</h1>
+                <div class="film-detail-meta">
+                    ${film.type} • ${film.duration} min • ${film.region}
+                </div>
+                <div class="film-detail-synopsis">
+                    ${film.synopsis}
+                </div>
+
+                ${film.funding && film.funding.length > 0 ? `
+                    <div class="credits-section" style="margin-bottom: 32px; background: #f0fdf4;">
+                        <h2 class="credits-title">💰 Produksjonsstøtte</h2>
+                        <p style="font-size: 14px; color: #606060; margin-bottom: 16px;">Filmen har fått tildelinger fra følgende aktører:</p>
+                        ${film.funding.map(fund => `
+                            <div class="credit-item" style="display: flex; justify-content: space-between; align-items: center; padding: 12px; background: white; border-radius: 8px; margin-bottom: 8px;">
+                                <div>
+                                    <strong>${fund.source}</strong>
+                                    <span style="color: #909090; font-size: 13px; margin-left: 8px;">${fund.type}</span>
+                                </div>
+                                <div style="font-size: 16px; font-weight: 600; color: #0f0f0f;">${fund.amount.toLocaleString('no-NO')} kr</div>
+                            </div>
+                        `).join('')}
+                        ${film.funding.length > 1 ? `
+                            <div style="margin-top: 16px; padding: 12px; background: white; border-radius: 8px; border: 2px solid #065fd4;">
+                                <div style="display: flex; justify-content: space-between; align-items: center;">
+                                    <strong>Total støtte:</strong>
+                                    <div style="font-size: 20px; font-weight: 700; color: #065fd4;">${film.funding.reduce((sum, f) => sum + f.amount, 0).toLocaleString('no-NO')} kr</div>
+                                </div>
+                            </div>
+                        ` : ''}
+                    </div>
+                ` : ''}
+
+                ${events.length > 0 ? `
+                    <div class="credits-section" style="margin-bottom: 32px; background: #f0f7ff;">
+                        <h2 class="credits-title">📅 Kommende visninger</h2>
+                        ${events.map(event => `
+                            <div style="padding: 16px; background: white; border-radius: 8px; margin-bottom: 12px; border-left: 4px solid #065fd4;">
+                                <div style="font-size: 16px; font-weight: 600; color: #0f0f0f; margin-bottom: 4px;">${event.venue}</div>
+                                <div style="font-size: 14px; color: #606060; margin-bottom: 8px;">
+                                    ${formatEventDate(event.date)} kl. ${event.time} • ${event.location}
+                                </div>
+                                ${event.description ? `<div style="font-size: 14px; color: #0f0f0f; margin-bottom: 8px;">${event.description}</div>` : ''}
+                                ${event.ticketUrl && event.ticketUrl !== '#' ? `
+                                    <a href="${event.ticketUrl}" target="_blank" style="display: inline-block; padding: 8px 16px; background: #065fd4; color: white; text-decoration: none; border-radius: 6px; font-size: 14px; font-weight: 600;">Kjøp billett →</a>
+                                ` : ''}
+                            </div>
+                        `).join('')}
+                    </div>
+                ` : ''}
+
+                <div class="rent-section">
+                    <div class="rent-info">
+                        <div class="rent-price">69 kr</div>
+                        <div class="rent-description">48 timers leie • Ubegrenset avspilling<br>70% til filmskaper • 25% mva • 5% drift</div>
+                    </div>
+                    <button class="rent-btn" onclick="rentFilm('${film.title}')">Lei på Midtflix</button>
+                </div>
+
+                ${film.externalStreaming && film.externalStreaming.length > 0 ? `
+                    <div class="credits-section" style="margin-top: 24px; background: #fef3f2;">
+                        <h2 class="credits-title">🎬 Se filmen andre steder</h2>
+                        ${film.externalStreaming.map(stream => `
+                            <div style="padding: 16px; background: white; border-radius: 8px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center;">
+                                <div>
+                                    <div style="font-size: 16px; font-weight: 600; margin-bottom: 4px;">${stream.platform}</div>
+                                    ${stream.availableUntil ? `<div style="font-size: 13px; color: #909090;">Tilgjengelig til: ${new Date(stream.availableUntil).toLocaleDateString('no-NO')}</div>` : ''}
+                                </div>
+                                <a href="${stream.url}" target="_blank" style="display: inline-block; padding: 10px 20px; background: #065fd4; color: white; text-decoration: none; border-radius: 6px; font-size: 14px; font-weight: 600;">Se nå →</a>
+                            </div>
+                        `).join('')}
+                    </div>
+                ` : ''}
+                <div class="credits-section">
+                    <h2 class="credits-title">Medvirkende</h2>
+                    ${Object.entries(groupedCredits).map(([role, persons]) => `
+                        <div class="credit-item">
+                            <strong>${role}:</strong>
+                            ${persons.map(p => `<a href="#person-${p.id}">${p.name}</a>`).join(', ')}
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        }
+
+        function renderPersonPage(personId) {
+            const person = getPerson(parseInt(personId));
+            if (!person) {
+                renderHomePage();
+                return;
+            }
+
+            const app = document.getElementById('app');
+            const backBtn = document.getElementById('backBtn');
+            backBtn.classList.remove('hidden');
+
+            const credits = getPersonCredits(person.id);
+            const events = getPersonEvents(person.id);
+
+            app.innerHTML = `
+                <div class="person-profile">
+                    <img src="${person.photo}" alt="${person.name}" class="person-photo">
+                    <h1 class="person-name">${person.name}</h1>
+                    <p class="person-bio">${person.bio}</p>
+                    <p class="person-region">${person.region}</p>
+                    <div class="person-social">
+                        <a href="${person.instagram}" class="social-link" title="Instagram">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                            </svg>
+                        </a>
+                        <a href="${person.website}" class="social-link" title="Nettside">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+                                <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+                            </svg>
+                        </a>
+                    </div>
+
+                    <div style="margin-top: 24px; padding: 20px; background: #f0f7ff; border-radius: 12px; text-align: center;">
+                        <h3 style="font-size: 18px; font-weight: 600; margin-bottom: 12px;">📬 Hold deg oppdatert</h3>
+                        <p style="font-size: 14px; color: #606060; margin-bottom: 16px;">Følg ${person.name} og få varsel om nye filmer og visninger</p>
+                        <div id="followMessage" style="margin-bottom: 12px;"></div>
+                        <form onsubmit="handleFollowPerson(event, ${person.id})" style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
+                            <input type="email" id="followEmail" class="form-input" style="max-width: 300px; margin: 0;" placeholder="Din e-postadresse" required>
+                            <button type="submit" class="btn-primary" style="width: auto; padding: 12px 24px;">Følg</button>
+                        </form>
+                        <p style="font-size: 12px; color: #909090; margin-top: 12px; font-style: italic;">Dette er en mockup - ingen ekte e-poster blir sendt</p>
+                    </div>
+                </div>
+
+                ${events.length > 0 ? `
+                    <div class="filmography-section" style="margin-top: 32px;">
+                        <div class="filmography-role">
+                            <h2 class="filmography-role-title">📅 Kommende visninger (${events.length})</h2>
+                            <div style="background: #f9f9f9; padding: 24px; border-radius: 12px;">
+                                ${events.map(event => {
+                                    const film = getFilm(event.filmId);
+                                    return `
+                                        <div style="padding: 16px; background: white; border-radius: 8px; margin-bottom: 12px; border-left: 4px solid #065fd4;">
+                                            <div style="font-size: 14px; color: #065fd4; font-weight: 600; margin-bottom: 4px;">${film ? film.title : 'Film'}</div>
+                                            <div style="font-size: 16px; font-weight: 600; color: #0f0f0f; margin-bottom: 4px;">${event.venue}</div>
+                                            <div style="font-size: 14px; color: #606060; margin-bottom: 8px;">
+                                                ${formatEventDate(event.date)} kl. ${event.time} • ${event.location}
+                                            </div>
+                                            ${event.description ? `<div style="font-size: 14px; color: #0f0f0f; margin-bottom: 8px;">${event.description}</div>` : ''}
+                                            ${event.ticketUrl && event.ticketUrl !== '#' ? `
+                                                <a href="${event.ticketUrl}" target="_blank" style="display: inline-block; padding: 8px 16px; background: #065fd4; color: white; text-decoration: none; border-radius: 6px; font-size: 14px; font-weight: 600;">Kjøp billett →</a>
+                                            ` : ''}
+                                        </div>
+                                    `;
+                                }).join('')}
+                            </div>
+                        </div>
+                    </div>
+                ` : ''}
+
+                <div class="filmography-section">
+                    ${Object.entries(credits).map(([role, films]) => `
+                        <div class="filmography-role">
+                            <h2 class="filmography-role-title">${role} (${films.length} ${films.length === 1 ? 'film' : 'filmer'})</h2>
+                            <div class="film-grid">
+                                ${films.map(film => `
+                                    <div class="film-card" onclick="navigateTo('film-${film.id}')">
+                                        <img src="${film.posterUrl}" alt="${film.title}" style="width: 100%; aspect-ratio: 16/9; object-fit: cover; border-radius: 4px; margin-bottom: 12px;">
+                                        <div class="film-title">${film.title}</div>
+                                        <div class="film-meta">${film.year}</div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        }
+
+        function navigateTo(hash) {
+            window.location.hash = hash;
+        }
+
+        function goBack() {
+            history.back();
+        }
+
+        function rentFilm(filmTitle) {
+            alert(`Du leier nå "${filmTitle}" for 69 kr.\n\n48 timers leieperiode starter nå.\n\n(Dette er en mockup - ingen betaling blir gjennomført)`);
+        }
+
+        function getCurrentUser() {
+            const user = localStorage.getItem('midtflix_current_user');
+            return user ? JSON.parse(user) : null;
+        }
+
+        function setCurrentUser(user) {
+            localStorage.setItem('midtflix_current_user', JSON.stringify(user));
+        }
+
+        function logout() {
+            localStorage.removeItem('midtflix_current_user');
+            navigateTo('');
+        }
+
+        function getUsers() {
+            const users = localStorage.getItem('midtflix_users');
+            return users ? JSON.parse(users) : [];
+        }
+
+        function saveUser(user) {
+            const users = getUsers();
+            users.push(user);
+            localStorage.setItem('midtflix_users', JSON.stringify(users));
+        }
+
+        function getStoredFilms() {
+            const storedFilms = localStorage.getItem('midtflix_films');
+            return storedFilms ? JSON.parse(storedFilms) : [];
+        }
+
+        function getAllFilms() {
+            const storedFilms = getStoredFilms();
+            const hiddenFilms = JSON.parse(localStorage.getItem('midtflix_hidden_films') || '[]');
+            const visibleHardcodedFilms = filmer.filter(f => !hiddenFilms.includes(f.id));
+            return [...visibleHardcodedFilms, ...storedFilms];
+        }
+
+        function addFilm(newFilm) {
+            const storedFilms = getStoredFilms();
+            storedFilms.push(newFilm);
+            localStorage.setItem('midtflix_films', JSON.stringify(storedFilms));
+        }
+
+        function getNextFilmId() {
+            const allFilms = getAllFilms();
+            return allFilms.length > 0 ? Math.max(...allFilms.map(f => f.id)) + 1 : 1;
+        }
+
+        function updateFilm(filmId, updatedData) {
+            const storedFilms = getStoredFilms();
+            const index = storedFilms.findIndex(f => f.id === filmId);
+
+            if (index !== -1) {
+                storedFilms[index] = { ...storedFilms[index], ...updatedData };
+                localStorage.setItem('midtflix_films', JSON.stringify(storedFilms));
+                return true;
+            }
+
+            // Hvis filmen er hardkodet, kan vi ikke redigere den direkte
+            // men vi kan legge til en "overskriv" i localStorage
+            const hardcodedFilm = filmer.find(f => f.id === filmId);
+            if (hardcodedFilm) {
+                const updatedFilm = { ...hardcodedFilm, ...updatedData };
+                storedFilms.push(updatedFilm);
+                localStorage.setItem('midtflix_films', JSON.stringify(storedFilms));
+
+                // Marker den originale som skjult
+                const hiddenFilms = JSON.parse(localStorage.getItem('midtflix_hidden_films') || '[]');
+                if (!hiddenFilms.includes(filmId)) {
+                    hiddenFilms.push(filmId);
+                    localStorage.setItem('midtflix_hidden_films', JSON.stringify(hiddenFilms));
+                }
+                return true;
+            }
+
+            return false;
+        }
+
+        function deleteFilm(filmId) {
+            const storedFilms = getStoredFilms();
+            const filteredFilms = storedFilms.filter(f => f.id !== filmId);
+
+            if (filteredFilms.length < storedFilms.length) {
+                localStorage.setItem('midtflix_films', JSON.stringify(filteredFilms));
+                return true;
+            }
+
+            // Hvis det er en hardkodet film, marker den som skjult
+            const hardcodedFilm = filmer.find(f => f.id === filmId);
+            if (hardcodedFilm) {
+                const hiddenFilms = JSON.parse(localStorage.getItem('midtflix_hidden_films') || '[]');
+                if (!hiddenFilms.includes(filmId)) {
+                    hiddenFilms.push(filmId);
+                    localStorage.setItem('midtflix_hidden_films', JSON.stringify(hiddenFilms));
+                }
+                return true;
+            }
+
+            return false;
+        }
+
+        // Event-funksjoner
+        function getStoredEvents() {
+            const storedEvents = localStorage.getItem('midtflix_events');
+            return storedEvents ? JSON.parse(storedEvents) : [];
+        }
+
+        function getAllEvents() {
+            return getStoredEvents();
+        }
+
+        function addEvent(newEvent) {
+            const storedEvents = getStoredEvents();
+            storedEvents.push(newEvent);
+            localStorage.setItem('midtflix_events', JSON.stringify(storedEvents));
+        }
+
+        function getNextEventId() {
+            const allEvents = getAllEvents();
+            return allEvents.length > 0 ? Math.max(...allEvents.map(e => e.id)) + 1 : 1;
+        }
+
+        function getFilmEvents(filmId) {
+            const now = new Date();
+            now.setHours(0, 0, 0, 0);
+            return getAllEvents()
+                .filter(event => event.filmId === filmId && new Date(event.date) >= now)
+                .sort((a, b) => new Date(a.date) - new Date(b.date));
+        }
+
+        function getPersonEvents(personId) {
+            const now = new Date();
+            now.setHours(0, 0, 0, 0);
+            const personFilms = getPersonFilms(personId);
+            const filmIds = personFilms.map(f => f.id);
+
+            return getAllEvents()
+                .filter(event => filmIds.includes(event.filmId) && new Date(event.date) >= now)
+                .sort((a, b) => new Date(a.date) - new Date(b.date));
+        }
+
+        function formatEventDate(dateString) {
+            const date = new Date(dateString);
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            return date.toLocaleDateString('no-NO', options);
+        }
+
+        // Follower-funksjoner
+        function getStoredFollowers() {
+            const storedFollowers = localStorage.getItem('midtflix_followers');
+            return storedFollowers ? JSON.parse(storedFollowers) : [];
+        }
+
+        function followPerson(email, personId) {
+            const followers = getStoredFollowers();
+
+            // Sjekk om allerede følger
+            if (followers.some(f => f.email === email && f.personId === personId)) {
+                return { success: false, message: 'Du følger allerede denne filmskaperen' };
+            }
+
+            followers.push({
+                email: email,
+                personId: personId,
+                subscribedAt: new Date().toISOString()
+            });
+
+            localStorage.setItem('midtflix_followers', JSON.stringify(followers));
+            return { success: true, message: 'Du følger nå denne filmskaperen!' };
+        }
+
+        function unfollowPerson(email, personId) {
+            const followers = getStoredFollowers();
+            const filtered = followers.filter(f => !(f.email === email && f.personId === personId));
+
+            localStorage.setItem('midtflix_followers', JSON.stringify(filtered));
+            return { success: true, message: 'Du følger ikke lenger denne filmskaperen' };
+        }
+
+        function getFollowers(personId) {
+            return getStoredFollowers().filter(f => f.personId === personId);
+        }
+
+        function isFollowing(email, personId) {
+            return getStoredFollowers().some(f => f.email === email && f.personId === personId);
+        }
+
+        function renderLoginPage() {
+            const app = document.getElementById('app');
+            const backBtn = document.getElementById('backBtn');
+            backBtn.classList.remove('hidden');
+
+            app.innerHTML = `
+                <div class="login-container">
+                    <h1 class="login-title">Logg inn</h1>
+                    <p class="login-subtitle">For filmskapere</p>
+
+                    <div class="security-warning">
+                        <strong>⚠️ SIKKERHETSADVARSEL</strong>
+                        Dette er en mockup/prototype. Passord lagres HELT ÅPENT i nettleserens localStorage uten kryptering. ALDRI bruk ekte passord her!
+                    </div>
+
+                    <div id="loginMessage"></div>
+
+                    <form onsubmit="handleLogin(event)">
+                        <div class="form-group">
+                            <label class="form-label">E-post</label>
+                            <input type="email" class="form-input" id="loginEmail" required placeholder="din@epost.no">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Passord</label>
+                            <input type="password" class="form-input" id="loginPassword" required placeholder="••••••••">
+                        </div>
+                        <button type="submit" class="btn-primary">Logg inn</button>
+                    </form>
+
+                    <div class="form-link">
+                        Har du ikke konto? <a href="#register">Registrer deg</a>
+                    </div>
+                    <div class="form-link">
+                        <a href="#">← Tilbake til forsiden</a>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderRegisterPage() {
+            const app = document.getElementById('app');
+            const backBtn = document.getElementById('backBtn');
+            backBtn.classList.remove('hidden');
+
+            app.innerHTML = `
+                <div class="login-container">
+                    <h1 class="login-title">Registrer deg</h1>
+                    <p class="login-subtitle">Opprett konto som filmskaper</p>
+
+                    <div class="security-warning">
+                        <strong>⚠️ SIKKERHETSADVARSEL</strong>
+                        Dette er en mockup/prototype. All data lagres HELT ÅPENT i nettleserens localStorage uten sikkerhet. ALDRI bruk ekte personopplysninger eller passord her!
+                    </div>
+
+                    <div style="background: #f0f7ff; border: 1px solid #065fd4; border-radius: 8px; padding: 12px 16px; margin-bottom: 24px; font-size: 13px; color: #0f0f0f;">
+                        <strong>ℹ️ VERIFISERING</strong><br>
+                        Kontoen din må verifiseres av en administrator før du kan publisere filmer. Dette er for å sikre at kun ekte filmskapere kan bruke plattformen.
+                    </div>
+
+                    <div id="registerMessage"></div>
+
+                    <form onsubmit="handleRegister(event)">
+                        <div class="form-group">
+                            <label class="form-label">Fullt navn</label>
+                            <input type="text" class="form-input" id="registerName" required placeholder="Ditt navn">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">E-post</label>
+                            <input type="email" class="form-input" id="registerEmail" required placeholder="din@epost.no">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Passord</label>
+                            <input type="password" class="form-input" id="registerPassword" required placeholder="••••••••">
+                        </div>
+                        <button type="submit" class="btn-primary">Opprett konto</button>
+                    </form>
+
+                    <div class="form-link">
+                        Har du allerede konto? <a href="#login">Logg inn</a>
+                    </div>
+                    <div class="form-link">
+                        <a href="#">← Tilbake til forsiden</a>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderAdminPage() {
+            const user = getCurrentUser();
+            if (!user) {
+                navigateTo('login');
+                return;
+            }
+
+            const app = document.getElementById('app');
+            const backBtn = document.getElementById('backBtn');
+            backBtn.classList.remove('hidden');
+
+            const userFilms = getAllFilms().filter(film =>
+                film.credits.some(credit => {
+                    const person = getPerson(credit.personId);
+                    return person && person.name === user.name;
+                })
+            );
+
+            const person = filmskapere.find(p => p.name === user.name);
+            const followers = person ? getFollowers(person.id) : [];
+            const userEvents = person ? getPersonEvents(person.id) : [];
+
+            app.innerHTML = `
+                <div class="admin-container">
+                    <div class="admin-header">
+                        <div>
+                            <h1 class="admin-title">Admin-panel</h1>
+                            <p style="color: #606060; margin-top: 4px;">
+                                Logget inn som: ${user.name}
+                                ${user.verified ? '<span style="color: #16a34a; font-weight: 600; margin-left: 8px;">✓ Verifisert</span>' : '<span style="color: #dc2626; font-weight: 600; margin-left: 8px;">⚠ Ikke verifisert</span>'}
+                            </p>
+                        </div>
+                        <button class="btn-secondary" onclick="logout()">Logg ut</button>
+                    </div>
+
+                    ${!user.verified ? `
+                        <div style="background: #fff3cd; border: 1px solid #ffc107; border-radius: 8px; padding: 16px; margin-bottom: 32px; font-size: 14px; color: #856404;">
+                            <strong>⏳ Kontoen din er ikke verifisert ennå</strong><br>
+                            Din konto venter på verifisering fra en administrator. Du kan fortsatt administrere filmer og visninger, men vær oppmerksom på at dette er en mockup-plattform.
+                        </div>
+                    ` : ''}
+
+                    <div class="security-warning" style="margin-bottom: 32px;">
+                        <strong>⚠️ PROTOTYPE - KUN FOR DEMO</strong>
+                        Dette er en mockup. All data lagres lokalt i nettleseren og forsvinner ved cache-tømming. Ingen ekte filredigering er implementert.
+                    </div>
+
+                    <div class="admin-section">
+                        <h2 class="section-title">Dine filmer (${userFilms.length})</h2>
+                        ${userFilms.length === 0 ?
+                            '<p style="color: #606060;">Du har ingen registrerte filmer ennå.</p>' :
+                            userFilms.map(film => `
+                                <div class="film-list-item">
+                                    <div class="film-list-info">
+                                        <div class="film-list-title">${film.title}</div>
+                                        <div class="film-list-meta">${film.year} • ${film.type} • ${film.duration} min</div>
+                                    </div>
+                                    <div class="film-list-actions">
+                                        <button class="btn-small btn-edit" onclick="showEditFilmForm(${film.id})">Rediger</button>
+                                        <button class="btn-small btn-delete" onclick="confirmDeleteFilm(${film.id}, '${film.title.replace(/'/g, "\\'")}')">Slett</button>
+                                    </div>
+                                </div>
+                            `).join('')
+                        }
+                        <button class="btn-primary" style="margin-top: 16px;" onclick="toggleAddFilmForm()">+ Legg til ny film</button>
+
+                        <div id="addFilmForm" class="hidden" style="margin-top: 24px; background: white; padding: 24px; border-radius: 8px;">
+                            <h3 style="font-size: 18px; font-weight: 600; margin-bottom: 16px;">Legg til ny film</h3>
+                            <div id="addFilmMessage"></div>
+                            <form onsubmit="handleAddFilm(event)">
+                                <div class="form-group">
+                                    <label class="form-label">Tittel</label>
+                                    <input type="text" class="form-input" id="filmTitle" required placeholder="Filmens tittel">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">År</label>
+                                    <input type="number" class="form-input" id="filmYear" required placeholder="2024" min="1900" max="2100">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Varighet (minutter)</label>
+                                    <input type="number" class="form-input" id="filmDuration" required placeholder="90" min="1" max="500">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Type</label>
+                                    <select class="form-input" id="filmType" required>
+                                        <option value="Dokumentar">Dokumentar</option>
+                                        <option value="Spillefilm">Spillefilm</option>
+                                        <option value="Kortfilm">Kortfilm</option>
+                                        <option value="Animasjon">Animasjon</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Synopsis</label>
+                                    <textarea class="form-input" id="filmSynopsis" required placeholder="Beskrivelse av filmen..." rows="4"></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Plakat-bilde (filnavn)</label>
+                                    <input type="text" class="form-input" id="filmPoster" required placeholder="f.eks. minfilm.jpg">
+                                    <p style="font-size: 12px; color: #606060; margin-top: 4px;">Last opp bildet til Midtflix-mappen først, skriv så filnavnet her.</p>
+                                </div>
+                                <div style="display: flex; gap: 12px;">
+                                    <button type="submit" class="btn-primary" style="flex: 1;">Lagre film</button>
+                                    <button type="button" class="btn-secondary" style="flex: 1;" onclick="toggleAddFilmForm()">Avbryt</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <div class="admin-section">
+                        <h2 class="section-title">Kommende visninger</h2>
+                        <p style="color: #606060; margin-bottom: 16px;">Annonser hvor filmene dine skal vises (festivaler, kinoer, arrangementer)</p>
+                        <button class="btn-primary" onclick="toggleAddEventForm()">+ Legg til ny visning</button>
+
+                        <div id="addEventForm" class="hidden" style="margin-top: 24px; background: white; padding: 24px; border-radius: 8px;">
+                            <h3 style="font-size: 18px; font-weight: 600; margin-bottom: 16px;">Legg til ny visning</h3>
+                            <div id="addEventMessage"></div>
+                            <form onsubmit="handleAddEvent(event)">
+                                <div class="form-group">
+                                    <label class="form-label">Velg film</label>
+                                    <select class="form-input" id="eventFilmId" required>
+                                        <option value="">-- Velg film --</option>
+                                        ${userFilms.map(film => `<option value="${film.id}">${film.title} (${film.year})</option>`).join('')}
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Type arrangement</label>
+                                    <select class="form-input" id="eventType" required>
+                                        <option value="Festival">Festival</option>
+                                        <option value="Kino">Kino</option>
+                                        <option value="Privatvisning">Privatvisning</option>
+                                        <option value="Streaming">Streaming</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Sted / Venue</label>
+                                    <input type="text" class="form-input" id="eventVenue" required placeholder="F.eks. Kosmorama Filmfestival">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">By / Lokasjon</label>
+                                    <input type="text" class="form-input" id="eventLocation" required placeholder="F.eks. Trondheim">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Dato</label>
+                                    <input type="date" class="form-input" id="eventDate" required>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Tidspunkt</label>
+                                    <input type="time" class="form-input" id="eventTime" required value="19:00">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Beskrivelse (valgfri)</label>
+                                    <textarea class="form-input" id="eventDescription" rows="2" placeholder="F.eks. Premiere med Q&A"></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Billett-URL (valgfri)</label>
+                                    <input type="url" class="form-input" id="eventTicketUrl" placeholder="https://...">
+                                </div>
+                                <div style="display: flex; gap: 12px;">
+                                    <button type="submit" class="btn-primary" style="flex: 1;">Legg til visning</button>
+                                    <button type="button" class="btn-secondary" style="flex: 1;" onclick="toggleAddEventForm()">Avbryt</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <div class="admin-section">
+                        <h2 class="section-title">Statistikk</h2>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 24px;">
+                            <div style="background: white; padding: 20px; border-radius: 8px; text-align: center;">
+                                <div style="font-size: 32px; font-weight: 700; color: #065fd4; margin-bottom: 8px;">${userFilms.length}</div>
+                                <div style="font-size: 14px; color: #606060;">Filmer</div>
+                            </div>
+                            <div style="background: white; padding: 20px; border-radius: 8px; text-align: center;">
+                                <div style="font-size: 32px; font-weight: 700; color: #065fd4; margin-bottom: 8px;">${userEvents.length}</div>
+                                <div style="font-size: 14px; color: #606060;">Kommende visninger</div>
+                            </div>
+                            <div style="background: white; padding: 20px; border-radius: 8px; text-align: center;">
+                                <div style="font-size: 32px; font-weight: 700; color: #065fd4; margin-bottom: 8px;">${followers.length}</div>
+                                <div style="font-size: 14px; color: #606060;">Følgere</div>
+                            </div>
+                        </div>
+                        ${followers.length > 0 ? `
+                            <div style="background: white; padding: 16px; border-radius: 8px;">
+                                <h3 style="font-size: 16px; font-weight: 600; margin-bottom: 12px;">Siste følgere</h3>
+                                ${followers.slice(-5).reverse().map(f => {
+                                    const date = new Date(f.subscribedAt);
+                                    return `<div style="padding: 8px 0; border-bottom: 1px solid #f2f2f2; display: flex; justify-content: space-between; align-items: center;">
+                                        <span style="font-size: 14px;">${f.email}</span>
+                                        <span style="font-size: 12px; color: #909090;">${date.toLocaleDateString('no-NO')}</span>
+                                    </div>`;
+                                }).join('')}
+                            </div>
+                        ` : '<p style="color: #606060;">Ingen følgere ennå</p>'}
+                    </div>
+                </div>
+            `;
+        }
+
+        function handleLogin(event) {
+            event.preventDefault();
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            const messageDiv = document.getElementById('loginMessage');
+
+            const users = getUsers();
+            const user = users.find(u => u.email === email && u.password === password);
+
+            if (user) {
+                setCurrentUser(user);
+                navigateTo('admin');
+            } else {
+                messageDiv.innerHTML = '<div class="error-message">Feil e-post eller passord</div>';
+            }
+        }
+
+        function handleRegister(event) {
+            event.preventDefault();
+            const name = document.getElementById('registerName').value;
+            const email = document.getElementById('registerEmail').value;
+            const password = document.getElementById('registerPassword').value;
+            const messageDiv = document.getElementById('registerMessage');
+
+            const users = getUsers();
+            if (users.some(u => u.email === email)) {
+                messageDiv.innerHTML = '<div class="error-message">Denne e-posten er allerede registrert</div>';
+                return;
+            }
+
+            const newUser = {
+                name,
+                email,
+                password,
+                verified: false,
+                verifiedAt: null,
+                verifiedBy: null
+            };
+
+            saveUser(newUser);
+            setCurrentUser(newUser);
+            messageDiv.innerHTML = '<div class="success-message">Konto opprettet! Sender deg til admin-panel...</div>';
+
+            setTimeout(() => {
+                navigateTo('admin');
+            }, 1500);
+        }
+
+        function toggleAddFilmForm() {
+            const form = document.getElementById('addFilmForm');
+            const messageDiv = document.getElementById('addFilmMessage');
+            if (form.classList.contains('hidden')) {
+                form.classList.remove('hidden');
+                messageDiv.innerHTML = '';
+            } else {
+                form.classList.add('hidden');
+                messageDiv.innerHTML = '';
+            }
+        }
+
+        function handleAddFilm(event) {
+            event.preventDefault();
+            const user = getCurrentUser();
+            if (!user) {
+                alert('Du må være logget inn for å legge til en film');
+                return;
+            }
+
+            const person = filmskapere.find(p => p.name === user.name);
+            if (!person) {
+                document.getElementById('addFilmMessage').innerHTML =
+                    '<div class="error-message">Fant ikke personprofil for din bruker. Kontakt administrator.</div>';
+                return;
+            }
+
+            const title = document.getElementById('filmTitle').value;
+            const year = parseInt(document.getElementById('filmYear').value);
+            const duration = parseInt(document.getElementById('filmDuration').value);
+            const type = document.getElementById('filmType').value;
+            const synopsis = document.getElementById('filmSynopsis').value;
+            const posterUrl = document.getElementById('filmPoster').value;
+
+            const newFilm = {
+                id: getNextFilmId(),
+                title: title,
+                year: year,
+                duration: duration,
+                type: type,
+                posterUrl: posterUrl,
+                synopsis: synopsis,
+                region: "Trøndelag",
+                credits: [
+                    { personId: person.id, role: "Regissør" }
+                ]
+            };
+
+            addFilm(newFilm);
+
+            document.getElementById('filmTitle').value = '';
+            document.getElementById('filmYear').value = '';
+            document.getElementById('filmDuration').value = '';
+            document.getElementById('filmType').value = 'Dokumentar';
+            document.getElementById('filmSynopsis').value = '';
+            document.getElementById('filmPoster').value = '';
+
+            document.getElementById('addFilmMessage').innerHTML =
+                '<div class="success-message">Filmen ble lagt til! Oppdaterer siden...</div>';
+
+            setTimeout(() => {
+                renderAdminPage();
+            }, 1000);
+        }
+
+        function showEditFilmForm(filmId) {
+            const film = getFilm(filmId);
+            if (!film) {
+                alert('Film ikke funnet');
+                return;
+            }
+
+            // Skjul "Legg til ny film" skjemaet hvis det er åpent
+            const addForm = document.getElementById('addFilmForm');
+            if (addForm && !addForm.classList.contains('hidden')) {
+                addForm.classList.add('hidden');
+            }
+
+            // Lag redigeringsskjema
+            const fundingJson = film.funding ? JSON.stringify(film.funding).replace(/"/g, '&quot;') : '[]';
+            const streamingJson = film.externalStreaming ? JSON.stringify(film.externalStreaming).replace(/"/g, '&quot;') : '[]';
+            const editFormHtml = `
+                <div id="editFilmForm" style="margin-top: 24px; background: white; padding: 24px; border-radius: 8px; border: 2px solid #065fd4;">
+                    <h3 style="font-size: 18px; font-weight: 600; margin-bottom: 16px;">Rediger film: ${film.title}</h3>
+                    <div id="editFilmMessage"></div>
+                    <form onsubmit="handleEditFilm(event, ${filmId})">
+                        <div class="form-group">
+                            <label class="form-label">Tittel</label>
+                            <input type="text" class="form-input" id="editFilmTitle" required value="${film.title}">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">År</label>
+                            <input type="number" class="form-input" id="editFilmYear" required value="${film.year}" min="1900" max="2100">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Varighet (minutter)</label>
+                            <input type="number" class="form-input" id="editFilmDuration" required value="${film.duration}" min="1" max="500">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Type</label>
+                            <select class="form-input" id="editFilmType" required>
+                                <option value="Dokumentar" ${film.type === 'Dokumentar' ? 'selected' : ''}>Dokumentar</option>
+                                <option value="Spillefilm" ${film.type === 'Spillefilm' ? 'selected' : ''}>Spillefilm</option>
+                                <option value="Kortfilm" ${film.type === 'Kortfilm' ? 'selected' : ''}>Kortfilm</option>
+                                <option value="Animasjon" ${film.type === 'Animasjon' ? 'selected' : ''}>Animasjon</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Synopsis</label>
+                            <textarea class="form-input" id="editFilmSynopsis" required rows="4">${film.synopsis}</textarea>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Plakat-bilde (filnavn)</label>
+                            <input type="text" class="form-input" id="editFilmPoster" required value="${film.posterUrl}">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Produksjonsstøtte</label>
+                            <div id="fundingList" style="margin-bottom: 12px;">
+                                ${film.funding && film.funding.length > 0 ? film.funding.map((fund, idx) => `
+                                    <div class="funding-item" style="padding: 12px; background: #f9f9f9; border-radius: 8px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center;">
+                                        <div>
+                                            <strong>${fund.source}</strong> - ${fund.amount.toLocaleString('no-NO')} kr
+                                            <br><span style="font-size: 12px; color: #909090;">${fund.type}</span>
+                                        </div>
+                                        <button type="button" class="btn-small btn-delete" onclick="removeFunding(${idx})">Fjern</button>
+                                    </div>
+                                `).join('') : '<p style="color: #909090; font-size: 14px;">Ingen tilskudd registrert</p>'}
+                            </div>
+                            <button type="button" class="btn-secondary" style="width: 100%;" onclick="showAddFundingFields()">+ Legg til tilskudd</button>
+                            <div id="addFundingFields" class="hidden" style="margin-top: 12px; padding: 16px; background: #f0f7ff; border-radius: 8px;">
+                                <div class="form-group">
+                                    <label class="form-label">Kilde</label>
+                                    <input type="text" class="form-input" id="fundingSource" placeholder="F.eks. Midtnorsk Filmsenter">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Beløp (kr)</label>
+                                    <input type="number" class="form-input" id="fundingAmount" placeholder="500000" min="0">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Type</label>
+                                    <input type="text" class="form-input" id="fundingType" placeholder="F.eks. Produksjonsstøtte">
+                                </div>
+                                <div style="display: flex; gap: 8px;">
+                                    <button type="button" class="btn-primary" style="flex: 1;" onclick="addFundingToList()">Legg til</button>
+                                    <button type="button" class="btn-secondary" style="flex: 1;" onclick="cancelAddFunding()">Avbryt</button>
+                                </div>
+                            </div>
+                            <input type="hidden" id="fundingData" value="${fundingJson}">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Ekstern streaming</label>
+                            <div id="streamingList" style="margin-bottom: 12px;">
+                                ${film.externalStreaming && film.externalStreaming.length > 0 ? film.externalStreaming.map((stream, idx) => `
+                                    <div class="streaming-item" style="padding: 12px; background: #f9f9f9; border-radius: 8px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center;">
+                                        <div>
+                                            <strong>${stream.platform}</strong>
+                                            <br><span style="font-size: 12px; color: #909090;">${stream.url}</span>
+                                        </div>
+                                        <button type="button" class="btn-small btn-delete" onclick="removeStreaming(${idx})">Fjern</button>
+                                    </div>
+                                `).join('') : '<p style="color: #909090; font-size: 14px;">Ingen eksterne lenker registrert</p>'}
+                            </div>
+                            <button type="button" class="btn-secondary" style="width: 100%;" onclick="showAddStreamingFields()">+ Legg til streaming-lenke</button>
+                            <div id="addStreamingFields" class="hidden" style="margin-top: 12px; padding: 16px; background: #fef3f2; border-radius: 8px;">
+                                <div class="form-group">
+                                    <label class="form-label">Plattform</label>
+                                    <input type="text" class="form-input" id="streamingPlatform" placeholder="F.eks. NRK">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">URL</label>
+                                    <input type="url" class="form-input" id="streamingUrl" placeholder="https://tv.nrk.no/...">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Tilgjengelig til (valgfri)</label>
+                                    <input type="date" class="form-input" id="streamingAvailable">
+                                </div>
+                                <div style="display: flex; gap: 8px;">
+                                    <button type="button" class="btn-primary" style="flex: 1;" onclick="addStreamingToList()">Legg til</button>
+                                    <button type="button" class="btn-secondary" style="flex: 1;" onclick="cancelAddStreaming()">Avbryt</button>
+                                </div>
+                            </div>
+                            <input type="hidden" id="streamingData" value="${streamingJson}">
+                        </div>
+
+                        <div style="display: flex; gap: 12px;">
+                            <button type="submit" class="btn-primary" style="flex: 1;">Lagre endringer</button>
+                            <button type="button" class="btn-secondary" style="flex: 1;" onclick="closeEditFilmForm()">Avbryt</button>
+                        </div>
+                    </form>
+                </div>
+            `;
+
+            // Finn plasseringen der vi skal sette inn skjemaet
+            const filmsSection = document.querySelector('.admin-section');
+            const existingEditForm = document.getElementById('editFilmForm');
+
+            if (existingEditForm) {
+                existingEditForm.remove();
+            }
+
+            filmsSection.insertAdjacentHTML('beforeend', editFormHtml);
+
+            // Scroll til skjemaet
+            document.getElementById('editFilmForm').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        function closeEditFilmForm() {
+            const editForm = document.getElementById('editFilmForm');
+            if (editForm) {
+                editForm.remove();
+            }
+        }
+
+        function handleEditFilm(event, filmId) {
+            event.preventDefault();
+
+            const title = document.getElementById('editFilmTitle').value;
+            const year = parseInt(document.getElementById('editFilmYear').value);
+            const duration = parseInt(document.getElementById('editFilmDuration').value);
+            const type = document.getElementById('editFilmType').value;
+            const synopsis = document.getElementById('editFilmSynopsis').value;
+            const posterUrl = document.getElementById('editFilmPoster').value;
+            const fundingDataStr = document.getElementById('fundingData').value;
+            const funding = fundingDataStr ? JSON.parse(fundingDataStr.replace(/&quot;/g, '"')) : [];
+            const streamingDataStr = document.getElementById('streamingData').value;
+            const externalStreaming = streamingDataStr ? JSON.parse(streamingDataStr.replace(/&quot;/g, '"')) : [];
+
+            const updatedData = {
+                title,
+                year,
+                duration,
+                type,
+                synopsis,
+                posterUrl,
+                funding,
+                externalStreaming
+            };
+
+            const success = updateFilm(filmId, updatedData);
+
+            if (success) {
+                document.getElementById('editFilmMessage').innerHTML =
+                    '<div class="success-message">Filmen ble oppdatert! Oppdaterer siden...</div>';
+
+                setTimeout(() => {
+                    renderAdminPage();
+                }, 1000);
+            } else {
+                document.getElementById('editFilmMessage').innerHTML =
+                    '<div class="error-message">Kunne ikke oppdatere filmen. Prøv igjen.</div>';
+            }
+        }
+
+        function showAddStreamingFields() {
+            const fields = document.getElementById('addStreamingFields');
+            fields.classList.remove('hidden');
+        }
+
+        function cancelAddStreaming() {
+            const fields = document.getElementById('addStreamingFields');
+            fields.classList.add('hidden');
+            document.getElementById('streamingPlatform').value = '';
+            document.getElementById('streamingUrl').value = '';
+            document.getElementById('streamingAvailable').value = '';
+        }
+
+        function addStreamingToList() {
+            const platform = document.getElementById('streamingPlatform').value;
+            const url = document.getElementById('streamingUrl').value;
+            const availableUntil = document.getElementById('streamingAvailable').value;
+
+            if (!platform || !url) {
+                alert('Plattform og URL må fylles ut');
+                return;
+            }
+
+            const streamingDataStr = document.getElementById('streamingData').value;
+            const streaming = streamingDataStr ? JSON.parse(streamingDataStr.replace(/&quot;/g, '"')) : [];
+
+            const newStream = {
+                platform,
+                url
+            };
+
+            if (availableUntil) {
+                newStream.availableUntil = availableUntil;
+            }
+
+            streaming.push(newStream);
+
+            document.getElementById('streamingData').value = JSON.stringify(streaming).replace(/"/g, '&quot;');
+
+            // Oppdater visningen
+            updateStreamingList();
+
+            // Nullstill skjema
+            cancelAddStreaming();
+        }
+
+        function removeStreaming(index) {
+            const streamingDataStr = document.getElementById('streamingData').value;
+            const streaming = streamingDataStr ? JSON.parse(streamingDataStr.replace(/&quot;/g, '"')) : [];
+
+            streaming.splice(index, 1);
+
+            document.getElementById('streamingData').value = JSON.stringify(streaming).replace(/"/g, '&quot;');
+
+            // Oppdater visningen
+            updateStreamingList();
+        }
+
+        function updateStreamingList() {
+            const streamingDataStr = document.getElementById('streamingData').value;
+            const streaming = streamingDataStr ? JSON.parse(streamingDataStr.replace(/&quot;/g, '"')) : [];
+
+            const listDiv = document.getElementById('streamingList');
+
+            if (streaming.length === 0) {
+                listDiv.innerHTML = '<p style="color: #909090; font-size: 14px;">Ingen eksterne lenker registrert</p>';
+            } else {
+                listDiv.innerHTML = streaming.map((stream, idx) => `
+                    <div class="streaming-item" style="padding: 12px; background: #f9f9f9; border-radius: 8px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <strong>${stream.platform}</strong>
+                            <br><span style="font-size: 12px; color: #909090;">${stream.url}</span>
+                        </div>
+                        <button type="button" class="btn-small btn-delete" onclick="removeStreaming(${idx})">Fjern</button>
+                    </div>
+                `).join('');
+            }
+        }
+
+        function showAddFundingFields() {
+            const fields = document.getElementById('addFundingFields');
+            fields.classList.remove('hidden');
+        }
+
+        function cancelAddFunding() {
+            const fields = document.getElementById('addFundingFields');
+            fields.classList.add('hidden');
+            document.getElementById('fundingSource').value = '';
+            document.getElementById('fundingAmount').value = '';
+            document.getElementById('fundingType').value = '';
+        }
+
+        function addFundingToList() {
+            const source = document.getElementById('fundingSource').value;
+            const amount = parseInt(document.getElementById('fundingAmount').value);
+            const type = document.getElementById('fundingType').value;
+
+            if (!source || !amount || !type) {
+                alert('Alle felter må fylles ut');
+                return;
+            }
+
+            const fundingDataStr = document.getElementById('fundingData').value;
+            const funding = fundingDataStr ? JSON.parse(fundingDataStr.replace(/&quot;/g, '"')) : [];
+
+            funding.push({
+                source,
+                amount,
+                type
+            });
+
+            document.getElementById('fundingData').value = JSON.stringify(funding).replace(/"/g, '&quot;');
+
+            // Oppdater visningen
+            updateFundingList();
+
+            // Nullstill skjema
+            cancelAddFunding();
+        }
+
+        function removeFunding(index) {
+            const fundingDataStr = document.getElementById('fundingData').value;
+            const funding = fundingDataStr ? JSON.parse(fundingDataStr.replace(/&quot;/g, '"')) : [];
+
+            funding.splice(index, 1);
+
+            document.getElementById('fundingData').value = JSON.stringify(funding).replace(/"/g, '&quot;');
+
+            // Oppdater visningen
+            updateFundingList();
+        }
+
+        function updateFundingList() {
+            const fundingDataStr = document.getElementById('fundingData').value;
+            const funding = fundingDataStr ? JSON.parse(fundingDataStr.replace(/&quot;/g, '"')) : [];
+
+            const listDiv = document.getElementById('fundingList');
+
+            if (funding.length === 0) {
+                listDiv.innerHTML = '<p style="color: #909090; font-size: 14px;">Ingen tilskudd registrert</p>';
+            } else {
+                listDiv.innerHTML = funding.map((fund, idx) => `
+                    <div class="funding-item" style="padding: 12px; background: #f9f9f9; border-radius: 8px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <strong>${fund.source}</strong> - ${fund.amount.toLocaleString('no-NO')} kr
+                            <br><span style="font-size: 12px; color: #909090;">${fund.type}</span>
+                        </div>
+                        <button type="button" class="btn-small btn-delete" onclick="removeFunding(${idx})">Fjern</button>
+                    </div>
+                `).join('');
+            }
+        }
+
+        function confirmDeleteFilm(filmId, filmTitle) {
+            if (confirm(`Er du sikker på at du vil slette "${filmTitle}"?\n\nDenne handlingen kan ikke angres.`)) {
+                const success = deleteFilm(filmId);
+
+                if (success) {
+                    alert('Filmen ble slettet!');
+                    renderAdminPage();
+                } else {
+                    alert('Kunne ikke slette filmen. Prøv igjen.');
+                }
+            }
+        }
+
+        function toggleAddEventForm() {
+            const form = document.getElementById('addEventForm');
+            const messageDiv = document.getElementById('addEventMessage');
+            if (form.classList.contains('hidden')) {
+                form.classList.remove('hidden');
+                if (messageDiv) messageDiv.innerHTML = '';
+            } else {
+                form.classList.add('hidden');
+                if (messageDiv) messageDiv.innerHTML = '';
+            }
+        }
+
+        function handleAddEvent(event) {
+            event.preventDefault();
+            const user = getCurrentUser();
+            if (!user) {
+                alert('Du må være logget inn for å legge til en visning');
+                return;
+            }
+
+            const person = filmskapere.find(p => p.name === user.name);
+            if (!person) {
+                document.getElementById('addEventMessage').innerHTML =
+                    '<div class="error-message">Fant ikke personprofil for din bruker.</div>';
+                return;
+            }
+
+            const filmId = parseInt(document.getElementById('eventFilmId').value);
+            const eventType = document.getElementById('eventType').value;
+            const venue = document.getElementById('eventVenue').value;
+            const location = document.getElementById('eventLocation').value;
+            const date = document.getElementById('eventDate').value;
+            const time = document.getElementById('eventTime').value;
+            const description = document.getElementById('eventDescription').value;
+            const ticketUrl = document.getElementById('eventTicketUrl').value;
+
+            const newEvent = {
+                id: getNextEventId(),
+                filmId: filmId,
+                personId: person.id,
+                eventType: eventType,
+                venue: venue,
+                location: location,
+                date: date,
+                time: time,
+                description: description || '',
+                ticketUrl: ticketUrl || '#'
+            };
+
+            addEvent(newEvent);
+
+            document.getElementById('eventFilmId').value = '';
+            document.getElementById('eventType').value = 'Festival';
+            document.getElementById('eventVenue').value = '';
+            document.getElementById('eventLocation').value = '';
+            document.getElementById('eventDate').value = '';
+            document.getElementById('eventTime').value = '19:00';
+            document.getElementById('eventDescription').value = '';
+            document.getElementById('eventTicketUrl').value = '';
+
+            document.getElementById('addEventMessage').innerHTML =
+                '<div class="success-message">Visningen ble lagt til! Oppdaterer siden...</div>';
+
+            setTimeout(() => {
+                renderAdminPage();
+            }, 1000);
+        }
+
+        function handleFollowPerson(event, personId) {
+            event.preventDefault();
+            const email = document.getElementById('followEmail').value;
+            const messageDiv = document.getElementById('followMessage');
+
+            const result = followPerson(email, personId);
+
+            if (result.success) {
+                messageDiv.innerHTML = '<div class="success-message">' + result.message + '</div>';
+                document.getElementById('followEmail').value = '';
+            } else {
+                messageDiv.innerHTML = '<div class="error-message">' + result.message + '</div>';
+            }
+        }
+
+        function route() {
+            const hash = window.location.hash.slice(1);
+
+            if (hash.startsWith('film-')) {
+                const filmId = hash.replace('film-', '');
+                renderFilmPage(filmId);
+            } else if (hash.startsWith('person-')) {
+                const personId = hash.replace('person-', '');
+                renderPersonPage(personId);
+            } else if (hash === 'login') {
+                renderLoginPage();
+            } else if (hash === 'register') {
+                renderRegisterPage();
+            } else if (hash === 'admin') {
+                renderAdminPage();
+            } else {
+                renderHomePage();
+            }
+        }
+
+        window.addEventListener('hashchange', route);
+        window.addEventListener('load', route);
+    </script>
+</body>
+</html>
