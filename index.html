@@ -376,6 +376,69 @@
             font-style: italic;
         }
 
+        .btn-browse {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 12px 32px;
+            font-size: 16px;
+            font-weight: 600;
+            background: #065fd4;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.2s;
+            text-decoration: none;
+        }
+
+        .btn-browse:hover {
+            background: #0449b8;
+        }
+
+        .filmmakers-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 24px;
+            margin-top: 32px;
+        }
+
+        .filmmaker-card {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .filmmaker-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .filmmaker-photo {
+            width: 100%;
+            aspect-ratio: 1;
+            object-fit: cover;
+        }
+
+        .filmmaker-info {
+            padding: 16px;
+        }
+
+        .filmmaker-name {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #0f0f0f;
+        }
+
+        .filmmaker-bio {
+            font-size: 14px;
+            color: #606060;
+            line-height: 1.5;
+        }
+
         .login-container {
             max-width: 400px;
             margin: 80px auto;
@@ -980,6 +1043,7 @@
                             oninput="handleSearch(this.value)"
                         >
                         <p class="search-disclaimer">Dette er en prototype – all informasjon er eksempeltekst</p>
+                        <button class="btn-browse" onclick="navigateTo('filmmakers')">Vis alle filmskapere</button>
                     </div>
                     <div id="searchResults"></div>
                 </div>
@@ -1246,6 +1310,31 @@
                                         <div class="film-meta">${film.year}</div>
                                     </div>
                                 `).join('')}
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        }
+
+        function renderFilmmakersPage() {
+            const app = document.getElementById('app');
+            const backBtn = document.getElementById('backBtn');
+            backBtn.classList.remove('hidden');
+
+            app.innerHTML = `
+                <div style="margin-bottom: 32px;">
+                    <h1 style="font-size: 42px; font-weight: 700; margin-bottom: 12px;">Filmskapere</h1>
+                    <p style="font-size: 18px; color: #606060;">Møt talentene bak trønderske produksjoner</p>
+                </div>
+
+                <div class="filmmakers-grid">
+                    ${filmskapere.map(person => `
+                        <div class="filmmaker-card" onclick="navigateTo('person-${person.id}')">
+                            <img src="${person.photo}" alt="${person.name}" class="filmmaker-photo">
+                            <div class="filmmaker-info">
+                                <div class="filmmaker-name">${person.name}</div>
+                                <div class="filmmaker-bio">${person.bio}</div>
                             </div>
                         </div>
                     `).join('')}
@@ -2298,6 +2387,8 @@
             } else if (hash.startsWith('person-')) {
                 const personId = hash.replace('person-', '');
                 renderPersonPage(personId);
+            } else if (hash === 'filmmakers') {
+                renderFilmmakersPage();
             } else if (hash === 'login') {
                 renderLoginPage();
             } else if (hash === 'register') {
