@@ -1,10 +1,7 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
-@layer base {
-  body {
-    @apply bg-gray-50 text-gray-900;
-    @apply min-h-screen;
-  }
+body {
+  background-color: rgb(249 250 251);
+  color: rgb(17 24 39);
+  min-height: 100vh;
 }
